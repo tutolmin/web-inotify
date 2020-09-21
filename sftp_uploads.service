@@ -1,0 +1,12 @@
+[Unit]
+Description=SFTP uploaded files to the remote DB/cache server
+After=httpd.service
+
+[Service]
+Type=forking
+ExecStart=/home/chesscheat/scripts/sftp_uploads.sh
+User=root
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
