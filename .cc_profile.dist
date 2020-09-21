@@ -1,0 +1,11 @@
+USRDIR=
+BINDIR=$USRDIR/bin
+ERRDIR=$USRDIR/err
+OUTDIR=$USRDIR/out
+UPLOADDIR=$USRDIR/symfony/public/uploads/PGNs
+APPDIR=$USRDIR/scripts
+SLOCK=$APPDIR/.slock
+CACHESRV=
+DBSRV=
+CACHEREMOTEDIR=/mnt/PGNs/incoming/0
+DBREMOTEDIR=/neo4j/incoming/0
