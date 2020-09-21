@@ -15,15 +15,15 @@
 
 . /home/chesscheat/.cc_profile
 
-LOCKFILE="$SLOCK"
+LOCKFILE="$LOCK"
 
 # Create lockfile if not exist
 if [[ ! -e $LOCKFILE ]]; then
-#  logger -t inotify "Creating $LOCKFILE < $$"
-  logger -t inotify "Creating $LOCKFILE"
+#  logger -t sftp "Creating $LOCKFILE < $$"
+  logger -t sftp "Creating $LOCKFILE"
   echo $$ > $LOCKFILE
 else
-  logger -t inotify "$LOCKFILE present!"
+  logger -t sftp "$LOCKFILE present!"
   exit
 fi
 
@@ -38,12 +38,12 @@ while [[ -f $FILE ]]; do
   # DO NOT parse json & lines files
   if [[ "$filetype" == "games" ]]; then
 
-    logger -t inotify "Parsing the $FILE with pgn-extract"
+    logger -t sftp "Parsing the $FILE with pgn-extract"
 
     # Parse the file with pgn-extract
     $BINDIR/pgn-extract -A $APPDIR/args $FILE -l "$ERRDIR/$filename.err" -o "$OUTDIR/$filename.out"
 
-    logger -t inotify "Compressing the $OUTDIR/${filename}.out to save bandwidth"
+    logger -t sftp "Compressing the $OUTDIR/${filename}.out to save bandwidth"
 
     # GZipping the file before transmission
     gzip -c "$OUTDIR/${filename}.out" > "$UPLOADDIR/${filename}.gz"
@@ -53,7 +53,7 @@ while [[ -f $FILE ]]; do
 
   else
 
-    logger -t inotify "Compressing the ${FILE} to save bandwidth"
+    logger -t sftp "Compressing the ${FILE} to save bandwidth"
 
     # GZipping the file before transmission
     gzip ${FILE}
@@ -62,7 +62,7 @@ while [[ -f $FILE ]]; do
 
   if [[ "$filetype" == "games" || "$filetype" == "lines" ]]; then
 
-    logger -t inotify "Copying the ${FILE}.gz remotely to $DBSRV"
+    logger -t sftp "Copying the ${FILE}.gz remotely to $DBSRV"
 
     scp -q "${FILE}.gz" "$DBSRV:$DBREMOTEDIR"
 
@@ -70,10 +70,10 @@ while [[ -f $FILE ]]; do
 
   if [[ "$filetype" == "games" || "$filetype" == "evals" ]]; then
 
-    logger -t inotify "Copying the ${FILE}.gz remotely to $CACHESRV"
+    logger -t sftp "Copying the ${FILE}.gz remotely to $CACHESRV"
 
     # Copy the file remotely
-    scp -q "${FILE}.gz" "$CACHESRV:$CACHEREMOTEDIR"
+#    scp -q "${FILE}.gz" "$CACHESRV:$CACHEREMOTEDIR"
 
   fi
 
@@ -89,7 +89,7 @@ while [[ -f $FILE ]]; do
 
 done
 
-logger -t inotify "Deleting $LOCKFILE"
+logger -t sftp "Deleting $LOCKFILE"
 
 # remove lock file
 unlink $LOCKFILE

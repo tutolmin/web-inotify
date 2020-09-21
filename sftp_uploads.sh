@@ -14,7 +14,7 @@
 while inotifywait -qq -e moved_to -e close_write $UPLOADDIR
 do
   # Log the event into system log
-  logger -t inotify "Event in $UPLOADDIR"
+  logger -t sftp_uploads "Event in $UPLOADDIR"
 
   # Fire an sftp uploader script
   $APPDIR/sftp.sh
